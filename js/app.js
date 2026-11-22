@@ -130,6 +130,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    // Pre-render QR on load
+    ensureQRCode();
+
     // Function to download the QR code as a high-resolution PNG
     function downloadQRCode(size = 600) {
       const qrSvg = qrContainer ? qrContainer.querySelector('svg') : null;
