@@ -1,0 +1,9 @@
+{
+  "appId": "com.ludomobile.ultimate",
+  "appName": "Ludo Mobile Ultimate",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}

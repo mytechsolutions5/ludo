@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ludo Mobile">
+  <meta name="description" content="Ultimate touch-optimized Ludo mobile game with smart AI and multiplayer.">
+  
+  <title>Ludo Mobile Ultimate</title>
+
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Mobile App Shell -->
+  <main class="app-shell">
+    
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-wrapper">
+        <span class="brand-icon">🎲</span>
+        <h1 class="brand-title">LUDO</h1>
+      </div>
+      <div class="header-actions">
+        <button id="install-app-btn" class="install-btn" style="display: none;">📲 Install</button>
+        <button id="sound-toggle-btn" class="icon-btn" title="Toggle Sound" aria-label="Toggle Sound">🔊</button>
+        <button id="rules-btn" class="icon-btn" title="Game Rules" aria-label="Rules">📖</button>
+        <button id="qr-btn" class="icon-btn" title="Scan & Share QR Code" aria-label="QR Code">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+            <line x1="6.5" y1="6.5" x2="6.51" y2="6.5"></line>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            <line x1="17.5" y1="17.5" x2="17.51" y2="17.5"></line>
+            <line x1="6.5" y1="17.5" x2="6.51" y2="17.5"></line>
+          </svg>
+        </button>
+        <button id="settings-btn" class="icon-btn" title="Settings" aria-label="Settings">⚙️</button>
+        <button id="new-game-btn" class="icon-btn" title="New Game" aria-label="New Game">🔄</button>
+      </div>
+    </header>
+
+    <!-- Top Players (Red & Green) -->
+    <section class="players-bar" id="players-bar-top" aria-label="Top Players"></section>
+
+    <!-- Interactive Ludo Board -->
+    <section class="board-wrapper">
+      <div class="board-container" id="board-container">
+        <!-- SVG board is injected here dynamically -->
+      </div>
+    </section>
+
+    <!-- Bottom Players (Blue & Yellow) -->
+    <section class="players-bar bottom" id="players-bar-bottom" aria-label="Bottom Players"></section>
+
+    <!-- Bottom Action & Dice Area -->
+    <footer class="actions-area">
+      <!-- Active Turn Status Banner -->
+      <div class="turn-banner" id="turn-banner">
+        <span id="turn-indicator-text">Loading game...</span>
+      </div>
+
+      <!-- 3D Dice and Roll Action -->
+      <div class="dice-action-row" id="dice-container">
+        <!-- 3D Dice & Roll Button rendered here -->
+      </div>
+    </footer>
+
+    <!-- Toast Notification Overlay -->
+    <div class="message-toast" id="message-toast" role="status"></div>
+  </main>
+
+  <!-- New Game Modal -->
+  <div class="modal-overlay" id="new-game-modal" role="dialog" aria-modal="true" aria-labelledby="new-game-title">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h2 class="modal-title" id="new-game-title">🎮 New Game Setup</h2>
+        <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="modal-section">
+        <div class="section-label">Number of Players</div>
+        <div class="option-group">
+          <label class="option-btn">
+            <input type="radio" name="player-count" value="2">
+            <span class="option-label">2 Players</span>
+          </label>
+          <label class="option-btn">
+            <input type="radio" name="player-count" value="3">
+            <span class="option-label">3 Players</span>
+          </label>
+          <label class="option-btn">
+            <input type="radio" name="player-count" value="4" checked>
+            <span class="option-label">4 Players</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <div class="section-label">Game Mode</div>
+        <div class="option-group modes">
+          <label class="option-btn">
+            <input type="radio" name="game-mode" value="vs_bot" checked>
+            <span class="option-label">👤 vs 🤖 Bots</span>
+          </label>
+          <label class="option-btn">
+            <input type="radio" name="game-mode" value="pass_n_play">
+            <span class="option-label">👥 Pass & Play</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="primary-btn" id="start-game-btn">START GAME</button>
+    </div>
+  </div>
+
+  <!-- Rules Modal -->
+  <div class="modal-overlay" id="rules-modal" role="dialog" aria-modal="true" aria-labelledby="rules-title">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h2 class="modal-title" id="rules-title">📖 Rules of Ludo</h2>
+        <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+      <div class="rules-list">
+        <div class="rule-item">
+          <span class="rule-icon">🎲</span>
+          <div><strong>Roll a 6 to Exit Base:</strong> Roll a 6 to bring a piece out of your yard onto your starting square. Rolling a 6 also awards an extra roll!</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">⭐</span>
+          <div><strong>Safe Spots:</strong> Squares marked with Stars and Starting squares are Safe Zones. Tokens on these squares cannot be captured!</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">💥</span>
+          <div><strong>Capturing Opponents:</strong> Landing on an opponent's token in an unsafe cell sends it back to its yard and gives you a bonus roll!</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">⚠️</span>
+          <div><strong>Three Sixes Rule:</strong> Rolling three 6s in a row forfeits that turn and passes play to the next player.</div>
+        </div>
+        <div class="rule-item">
+          <span class="rule-icon">🏆</span>
+          <div><strong>Winning:</strong> The first player to safely navigate all 4 tokens around the board and into the Center Home wins!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-overlay" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h2 class="modal-title" id="settings-title">⚙️ Game Settings</h2>
+        <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="setting-row">
+        <span class="switch-label">Sound Effects</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="setting-sound" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-row">
+        <span class="switch-label">Haptic Vibration</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="setting-haptics" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-row">
+        <span class="switch-label">Fast Bot Animations</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="setting-fast-anim">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR Code / Share Modal -->
+  <div class="modal-overlay" id="qr-modal" role="dialog" aria-modal="true" aria-labelledby="qr-modal-title">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h2 class="modal-title" id="qr-modal-title">📱 Play on Mobile</h2>
+        <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="qr-modal-body">
+        <p class="qr-desc">Scan with your phone camera to open and play Ludo on any device.</p>
+        
+        <div class="qr-code-wrapper" id="qr-code-container">
+          <!-- QR SVG code injected dynamically -->
+        </div>
+
+        <div class="qr-link-row">
+          <input type="text" id="qr-link-input" class="qr-link-input" readonly value="https://ludo-mobile.arpitkanotra.workers.dev" />
+          <button id="qr-copy-btn" class="qr-copy-btn">📋 Copy</button>
+        </div>
+
+        <button id="qr-native-share-btn" class="qr-share-btn" style="display: none;">📤 Share Game Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Victory Celebration Modal -->
+  <div class="modal-overlay" id="victory-modal" role="dialog" aria-modal="true" aria-labelledby="victory-title">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h2 class="modal-title" id="victory-title">🎉 Victory!</h2>
+        <button class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="victory-podium" id="victory-podium">
+        <!-- Filled dynamically -->
+      </div>
+
+      <div class="victory-stats" id="victory-stats">
+        <!-- Filled dynamically -->
+      </div>
+
+      <button class="primary-btn" id="play-again-btn">PLAY AGAIN</button>
+    </div>
+  </div>
+
+  <!-- Game Scripts -->
+  <script src="./js/audio.js"></script>
+  <script src="./js/ludo-engine.js"></script>
+  <script src="./js/board-renderer.js"></script>
+  <script src="./js/dice-controller.js"></script>
+  <script src="./js/qr-generator.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+.wrangler/
+execute_payload.js
+execute_args.json
+payload.json
