@@ -644,7 +644,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Boot the game!
   initModals();
-  startNewGame({ playerCount: 4, mode: 'vs_bot' });
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialMode = urlParams.get('mode') === 'pass_n_play' ? 'pass_n_play' : 'vs_bot';
+  const initialPlayers = parseInt(urlParams.get('players'), 10) || 4;
+  startNewGame({ playerCount: initialPlayers, mode: initialMode });
 
   // Register service worker if supported
   if ('serviceWorker' in navigator) {
