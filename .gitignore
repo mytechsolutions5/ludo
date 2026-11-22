@@ -1,6 +1,7 @@
 node_modules/
 .DS_Store
 .wrangler/
+dist/
 execute_payload.js
 execute_args.json
 payload.json
