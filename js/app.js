@@ -86,23 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
       rulesModal.classList.add('active');
     });
 
-    if (qrBtn && qrModal) {
-      qrBtn.addEventListener('click', () => {
-        window.soundEngine.playClick();
-        if (qrContainer && !qrContainer.hasChildNodes()) {
-          if (window.QRCode && window.QRCode.generateSVG) {
-            qrContainer.innerHTML = window.QRCode.generateSVG(shareUrl, {
-              size: 220,
-              margin: 3,
-              colorDark: '#090d16',
-              colorLight: '#ffffff'
-            });
-          }
-        }
-        qrModal.classList.add('active');
-      });
-    }
-
     settingsBtn.addEventListener('click', () => {
       window.soundEngine.playClick();
       settingsModal.classList.add('active');
@@ -113,18 +96,101 @@ document.addEventListener('DOMContentLoaded', () => {
       newGameModal.classList.add('active');
     });
 
-    // QR Code modal actions
+    // QR Code modal elements
     const qrContainer = document.getElementById('qr-code-container');
     const qrLinkInput = document.getElementById('qr-link-input');
     const qrCopyBtn = document.getElementById('qr-copy-btn');
+    const qrDownloadBtn = document.getElementById('qr-download-btn');
     const qrNativeShareBtn = document.getElementById('qr-native-share-btn');
 
-    const shareUrl = window.location.origin && window.location.origin.includes('workers.dev')
+    const shareUrl = (window.location.origin && window.location.origin.includes('workers.dev'))
       ? window.location.href.split('?')[0].split('#')[0]
       : 'https://ludo-mobile.arpitkanotra.workers.dev';
 
     if (qrLinkInput) {
       qrLinkInput.value = shareUrl;
+    }
+
+    // Function to ensure QR Code SVG is generated & rendered
+    function ensureQRCode() {
+      if (!qrContainer) return;
+      if (!qrContainer.querySelector('svg')) {
+        if (window.QRCode && window.QRCode.generateSVG) {
+          try {
+            qrContainer.innerHTML = window.QRCode.generateSVG(shareUrl, {
+              size: 240,
+              margin: 3,
+              colorDark: '#090d16',
+              colorLight: '#ffffff'
+            });
+          } catch (err) {
+            console.error('QR code generation failed:', err);
+          }
+        }
+      }
+    }
+
+    // Function to download the QR code as a high-resolution PNG
+    function downloadQRCode(size = 600) {
+      const qrSvg = qrContainer ? qrContainer.querySelector('svg') : null;
+      if (!qrSvg) {
+        showToast('QR Code not ready', 1500, 'warning');
+        return;
+      }
+      try {
+        const svgString = new XMLSerializer().serializeToString(qrSvg);
+        const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+        const blobUrl = URL.createObjectURL(svgBlob);
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, size, size);
+          ctx.drawImage(img, 0, 0, size, size);
+          URL.revokeObjectURL(blobUrl);
+
+          canvas.toBlob((pngBlob) => {
+            if (!pngBlob) {
+              showToast('Download failed', 1500, 'warning');
+              return;
+            }
+            const pngUrl = URL.createObjectURL(pngBlob);
+            const a = document.createElement('a');
+            a.download = 'ludo-mobile-qr.png';
+            a.href = pngUrl;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(pngUrl), 2000);
+            showToast('✅ QR Code downloaded!', 2000, 'success');
+          }, 'image/png');
+        };
+        img.onerror = () => {
+          showToast('Failed to render QR for download', 2000, 'warning');
+        };
+        img.src = blobUrl;
+      } catch (err) {
+        console.error('Download error:', err);
+        showToast('Download failed', 2000, 'warning');
+      }
+    }
+
+    if (qrBtn && qrModal) {
+      qrBtn.addEventListener('click', () => {
+        window.soundEngine.playClick();
+        ensureQRCode();
+        qrModal.classList.add('active');
+      });
+    }
+
+    if (qrDownloadBtn) {
+      qrDownloadBtn.addEventListener('click', () => {
+        window.soundEngine.playClick();
+        downloadQRCode(600);
+      });
     }
 
     if (qrCopyBtn && qrLinkInput) {
