@@ -4,6 +4,14 @@ A modern, responsive, touch-optimized **Ludo Mobile Game** built for mobile smar
 
 ---
 
+## 🌐 Live Deployments & Repository
+
+- **GitHub Repository**: [https://github.com/mytechsolutions5/ludo](https://github.com/mytechsolutions5/ludo)
+- **Live Cloudflare Deployment**: [https://ludo-mobile.arpitkanotra.workers.dev](https://ludo-mobile.arpitkanotra.workers.dev)
+- **GitHub Pages Deployment**: [https://mytechsolutions5.github.io/ludo/](https://mytechsolutions5.github.io/ludo/)
+
+---
+
 ## ✨ Features
 
 - **Standard 15x15 International Ludo Board**: Authentic layout with 4 colored quadrants, bases, starting squares, center home triangles, and 8 safe star squares.
@@ -18,23 +26,12 @@ A modern, responsive, touch-optimized **Ludo Mobile Game** built for mobile smar
 - **Game Modes**:
   - 👤 **Single Player vs Bots** (1 Human vs 1–3 AI bots)
   - 👥 **Local Pass & Play** (2 to 4 Players on one phone/tablet)
+- **📱 QR Code Sharing**: In-app QR code button next to Settings generates an instant scannable QR code and native share sheet link for friends.
 - **3D Animated Dice**: Realistic tumbling 3D dice with dots and tactile tap-to-roll feedback.
 - **Synthesized Web Audio API**: Crisp zero-latency sound effects generated on-the-fly (dice roll rattle, hop steps, captures, safe zone chimes, celebration fanfare).
 - **Haptic Vibration**: Native tactile vibration on rolls and captures via `navigator.vibrate`.
-- **Installable PWA**: Add to Home Screen for fullscreen native app experience with offline support (`sw.js`).
+- **Installable PWA**: Add to Home Screen for fullscreen native app experience with offline support (`sw.js`). Includes distinct `any` and `maskable` high-resolution icons (192x192 & 512x512) and store preview screenshots for 100% PWABuilder compliance.
 - **Capacitor Ready**: Pre-configured `capacitor.config.json` for wrapping into native iOS/Android binaries.
-
----
-
-## 🌐 Live Cloudflare Deployment
-
-Your mobile Ludo game is live on Cloudflare Workers:
-
-👉 **[https://ludo-mobile.arpitkanotra.workers.dev](https://ludo-mobile.arpitkanotra.workers.dev)**
-
-- **Global Edge Delivery**: High-speed edge routing across 330+ Cloudflare data centers worldwide.
-- **PWA Ready**: Open on your iPhone or Android phone to install directly to your home screen.
-- **Instant Updates**: Deployed as an edge Worker with pre-cached static assets and SPA routing.
 
 ---
 
@@ -44,7 +41,7 @@ To preview and play locally:
 
 ```bash
 # Serve locally on port 3000
-serve -p 3000 .
+npx serve -p 3000 .
 # or with Python
 python3 -m http.server 3000
 ```
@@ -58,56 +55,46 @@ Then open `http://localhost:3000` in your browser (or use Chrome DevTools Mobile
 ### iPhone / iPad (Safari)
 1. Open the game URL in **Safari**.
 2. Tap the **Share** button (box with upward arrow).
-3. Tap **"Add to Home Screen"**.
-4. Launch from your home screen as a fullscreen native-style app!
+3. Scroll down and tap **"Add to Home Screen"**.
+4. Tap **Add** in the top right. Launch directly from your home screen for a fullscreen native experience!
 
-### Android (Chrome)
-1. Open the game URL in **Google Chrome**.
-2. Tap the banner or menu (three dots) -> **"Install app"** or **"Add to Home screen"**.
-3. Launch from your launcher/home screen!
-
----
-
-## 🛠️ Building Native Android & iOS Apps (Capacitor)
-
-If you want to create native app packages for the Google Play Store or Apple App Store:
-
-1. **Initialize Capacitor**:
-   ```bash
-   npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/ios
-   npx cap init
-   ```
-2. **Add Platforms**:
-   ```bash
-   npx cap add android
-   npx cap add ios
-   ```
-3. **Open in Android Studio / Xcode**:
-   ```bash
-   npx cap open android
-   npx cap open ios
-   ```
-4. Build your `.apk` / `.aab` in Android Studio or archive your `.ipa` in Xcode!
+### Android (Chrome / Brave / Edge)
+1. Open the game URL in **Chrome**.
+2. Tap the **"📲 Install"** banner at the top (or tap the 3 dots menu `⋮` and select **"Add to Home Screen"** / **"Install App"**).
+3. Tap **Install** to add the icon to your app drawer and home screen.
 
 ---
 
-## 📂 Project Architecture
+## 🛠️ Project Structure
 
 ```
-mobile games/
-├── index.html            # Main mobile HTML shell
-├── manifest.json         # PWA Manifest configuration
-├── sw.js                 # Offline service worker
+├── .github/workflows/deploy.yml # GitHub Actions auto-deployment to Pages
 ├── css/
-│   └── style.css         # Mobile app styles, glassmorphism, 3D dice, animations
+│   └── style.css              # Mobile glassmorphism theme, safe areas, 3D dice
 ├── js/
-│   ├── audio.js          # Procedural Web Audio synthesizer & haptics
-│   ├── ludo-engine.js    # International Ludo rules, coordinate tracks & AI logic
-│   ├── board-renderer.js # Scalable SVG 15x15 board & token clustering renderer
-│   ├── dice-controller.js# 3D tumbling dice controller
-│   └── app.js            # Main turn loop & game controller
+│   ├── app.js                 # UI controller, event bindings, modal logic
+│   ├── audio.js               # Zero-dependency Web Audio API procedural sound engine
+│   ├── board-renderer.js      # Dynamic 15x15 SVG board renderer & token animations
+│   ├── dice-controller.js     # 3D tumbling CSS cube dice controller
+│   ├── ludo-engine.js         # Core international Ludo engine with AI bots
+│   └── qr-generator.js        # Lightweight pure JS QR Code generator
 ├── icons/
-│   └── icon.svg          # App icon
-├── capacitor.config.json # Native build configuration
-└── package.json          # Node scripts & dependencies
+│   ├── icon-192.png           # Standard 192x192 PNG (purpose: any)
+│   ├── icon-512.png           # Standard 512x512 PNG (purpose: any)
+│   ├── maskable-icon-192.png  # Adaptive 192x192 PNG (purpose: maskable)
+│   ├── maskable-icon-512.png  # Adaptive 512x512 PNG (purpose: maskable)
+│   ├── screenshot-mobile.png  # Store screenshot (narrow)
+│   ├── screenshot-wide.png    # Store screenshot (wide)
+│   └── icon.svg               # Vector icon
+├── index.html                 # Mobile PWA shell, modals, viewport config
+├── manifest.json              # W3C Web App Manifest (PWABuilder compliant)
+├── sw.js                      # Service Worker for offline play and asset caching
+├── worker.js                  # Cloudflare Workers edge server bundle
+└── capacitor.config.json      # Native build configuration
 ```
+
+---
+
+## 📄 License
+
+MIT License. Free for personal and educational use.
