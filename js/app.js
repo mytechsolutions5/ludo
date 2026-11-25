@@ -355,8 +355,8 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
 
-      // Top bar gets Red & Green; Bottom bar gets Blue & Yellow
-      if (p.color === 'red' || p.color === 'green') {
+      // Top bar gets Red & Blue; Bottom bar gets Green & Yellow
+      if (p.color === 'red' || p.color === 'blue') {
         playersBarTop.appendChild(card);
       } else {
         playersBarBottom.appendChild(card);

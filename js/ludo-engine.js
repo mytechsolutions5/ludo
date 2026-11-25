@@ -80,9 +80,9 @@ const COLOR_CONFIG = {
     themeColor: '#ef4444',
     bgLight: '#fee2e2'
   },
-  green: {
-    id: 'green',
-    name: 'Green',
+  blue: {
+    id: 'blue',
+    name: 'Blue',
     startIndex: 14,
     turnInIndex: 12,
     homeStretch: [
@@ -92,8 +92,8 @@ const COLOR_CONFIG = {
     yardSlots: [
       [2, 11], [2, 12], [3, 11], [3, 12]
     ],
-    themeColor: '#10b981',
-    bgLight: '#d1fae5'
+    themeColor: '#3b82f6',
+    bgLight: '#dbeafe'
   },
   yellow: {
     id: 'yellow',
@@ -110,9 +110,9 @@ const COLOR_CONFIG = {
     themeColor: '#eab308',
     bgLight: '#fef9c3'
   },
-  blue: {
-    id: 'blue',
-    name: 'Blue',
+  green: {
+    id: 'green',
+    name: 'Green',
     startIndex: 40,
     turnInIndex: 38,
     homeStretch: [
@@ -122,8 +122,8 @@ const COLOR_CONFIG = {
     yardSlots: [
       [11, 2], [11, 3], [12, 2], [12, 3]
     ],
-    themeColor: '#3b82f6',
-    bgLight: '#dbeafe'
+    themeColor: '#22c55e',
+    bgLight: '#d1fae5'
   }
 };
 
@@ -196,11 +196,11 @@ class LudoEngine {
   initPlayers(options = {}) {
     // Determine player color assignment
     // 2 players: Red vs Yellow (opposite) or Red vs Green
-    let activeColors = ['red', 'green', 'yellow', 'blue'];
+    let activeColors = ['red', 'blue', 'yellow', 'green'];
     if (this.playerCount === 2) {
       activeColors = ['red', 'yellow']; // Classical opposite diagonal
     } else if (this.playerCount === 3) {
-      activeColors = ['red', 'green', 'yellow'];
+      activeColors = ['red', 'blue', 'yellow'];
     }
 
     this.players = activeColors.map((colorKey, index) => {

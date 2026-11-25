@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ludo-mobile-v5';
+const CACHE_NAME = 'ludo-mobile-v6';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
